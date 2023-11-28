@@ -40,7 +40,7 @@ void limpiaTexto(FILE* archivo){
 
 char* creaRuta(char persona[]){
     char* ruta = malloc(100);
-    strcat(strcpy(ruta, "Textos/"), persona);
+    strcat(strcat(strcpy(ruta, "Textos/"), persona), "/elamordespuesdelamor.txt");
     return ruta;
 }
 
@@ -49,24 +49,20 @@ char* creaRuta(char persona[]){
 int main(int argc, char *argv[]){
     FILE *archivo;
 
-    // TEST
-    //creaRutaTest();
-    // END TEST
-
     char* direc = creaRuta(argv[1]);
     archivo = fopen(direc, "r");
+    free(direc);
+    limpiaTexto(archivo);
+    fclose(archivo);
+    
+    /*
+    char comando[30];
+    strcat(strcat(strcpy(comando, "cd "), direc), " && ls");
+    printf("%s\n", comando);
+    */
 
-    printf("%s\n", direc);
-    char ruta[30];
-    strcat(strcat(strcpy(ruta, "cd "), direc), " && ls");
-    printf("%s\n", ruta);
-
-    int r = system(ruta);
+    int r = system("cd Textos/Fito_paez && ls -I archivo.txt > archivo.txt");
     printf("%d\n", r);
 
-    limpiaTexto(archivo);
-    
-    free(direc);
-    fclose(archivo);
     return 0;
 }
