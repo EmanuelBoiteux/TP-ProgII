@@ -6,70 +6,31 @@
 
 void limpiaTexto(FILE* archivo, char persona[]){
     FILE* salida;
-    char direc[255], linea[255];
+    char direc[255];
 
     snprintf(direc, 255, "Entradas/%s.txt", persona);
     salida = fopen(direc, "a");
-    /*
-    int punto = 1;
     
-    for (int i = 0; fgets(linea, 255, archivo) != NULL; i++){
-        fputc(tolower(linea[0]), salida);
-        for (int j = 1; j < strlen(linea); j++){
-            if(linea[j] == '\n' && punto == 0){
-                fputc(' ', salida);
-            }
-            else if ((isalpha(linea[j]) || isspace(linea[j])) && linea[j] != '\n'){
-                if (isupper(linea[j])){
-                    if (punto == 0){
-                        fputc(tolower(linea[j]), salida);
-                    }
-                    else {
-                        fputc(tolower(linea[j]), salida);
-                        punto = 0;
-                    }
-                }
-                else {
-                    fputc(linea[j], salida);
-                    punto = 0;
-                }
-            }
-             FUNCIONA CON CALAMARO
-            else if (linea[j] == '.'){
-                punto = 1;
-                fputc('\n', salida);
-                linea[j++] = '\0';
-            }
-            
-            else if (linea[j] == '.'){
-
-            }
+    char c = fgetc(archivo);
+    while(c != EOF){
+        if (isspace(c)){
+            while((c = fgetc(archivo)) == ' ');
+            ungetc(c, archivo);
+            fputc(' ', salida);
         }
-    }*/
-    int punto = 1;
-    int espacio = 0;
-    for (int i = 0; fgets(linea, 255, archivo) != NULL; i++){
-        fputc(tolower(linea[0]), salida);
-        for (int j = 1; j < strlen(linea); j++){
-            if (isspace(linea[j]) && punto == 0 && espacio == 0){
-                fputc(' ', salida);
-                espacio = 1;
-            }
-            else if (linea[j] == '\n' && punto == 0 && espacio == 0){
-                fputc(' ', salida);
-                espacio = 1;
-            }
-            else if (linea[j] == '.'){
-                fputc('\n', salida);
-                punto = 1;
-                espacio = 0;
-            }
-            else if (isalpha(linea[j]) && linea[j] != '\n'){
-                fputc(tolower(linea[j]), salida);
-                punto = 0;
-                espacio = 0;
-            }
+        else if (c == '\n'){
+            fputc(' ', salida);
         }
+        else if (c == '.'){
+            if ((c = fgetc(archivo)) != ' ' && c != '\n'){
+                ungetc(c, archivo);
+            }
+            fputc('\n', salida);
+        }
+        else if (isalpha(c)){
+            fputc(tolower(c), salida);
+        }
+        c = fgetc(archivo);
     }
 
     fclose(salida);
@@ -78,28 +39,39 @@ void limpiaTexto(FILE* archivo, char persona[]){
 
 char* creaRuta(char persona[]){
     char* ruta = malloc(100);
+    //snprintf(ruta, sizeof(ruta), "Textos/%s/archivo.txt", persona);
     strcat(strcat(strcpy(ruta, "Textos/"), persona), "/archivo.txt");
     return ruta;
 }
 
 void getArchivos(char nombre[]){
     char comando[100];
-    strcat(strcat(strcpy(comando, "cd Textos/"), nombre), " && ls -I archivo.txt > archivo.txt");
+    snprintf(comando, sizeof(comando), "cd Textos/%s && ls -I archivo.txt > archivo.txt", nombre);
+    //strcat(strcat(strcpy(comando, "cd Textos/"), nombre), " && ls -I archivo.txt > archivo.txt");
     system(comando); 
 }
 
-void getNombre(char* persona){
+void getNombre(char persona[]){
+
+    /*
     FILE* archivo = fopen(creaRuta(persona), "r");
+    char linea[255];
+    */
+
+    char ruta[100];
+    snprintf(ruta, sizeof(ruta), "Textos/%s/archivo.txt", persona);
+    FILE* archivo = fopen(ruta, "r");
     char linea[255];
 
     while(fgets(linea, 255, archivo) != NULL){
-        char direc[255];
-        snprintf(direc, 255, "Textos/%s/%s", persona, linea);
+        char direc[300];
+        snprintf(direc, 300, "Textos/%s/%s", persona, linea);
         direc[strlen(direc) - 1] = '\0';
         FILE* leeTexto = fopen(direc, "r");
         limpiaTexto(leeTexto, persona);
         fclose(leeTexto);
     }
+    fclose(archivo);
 }
 
 
