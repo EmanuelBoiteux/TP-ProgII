@@ -74,11 +74,18 @@ void getNombre(char persona[]){
     fclose(archivo);
 }
 
+void inicializePython(char nombre[]){
+    char rutaPython[100];
+    snprintf(rutaPython, 100, "python main.py %s", nombre);
+    system(rutaPython);
+}
+
 
 int main(int argc, char *argv[]){
 
     getArchivos(argv[1]);
     getNombre(argv[1]);
+    inicializePython(argv[1]);
 
     return 0;
 }
