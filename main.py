@@ -4,9 +4,9 @@ import json
 def readArchivo(nombre: str):
     rutaArchivo = f"Entradas/{nombre}.txt"
     fLectura = open(rutaArchivo, 'r')
-    listaPrueba = listaPalabras(fLectura)
-    diccionarioPalabras = getPalabras(fLectura, listaPrueba)
-    completaFrase(nombre, diccionarioPalabras)
+    palabrasList = listaPalabras(fLectura)
+    diccionarioPalabras = getPalabras(fLectura, palabrasList)
+    completaFrase(nombre, diccionarioPalabras, palabrasList)
     fLectura.close()
     
 
@@ -29,7 +29,7 @@ def listaPalabras(archivo) -> list[str]:
 ### TESTEAR ###
 # n = 1: palabra anterior
 # n = -1: palabra posterior
-def palabrasAntePos(palabra, listaPalabras, n):
+def palabrasAntePos(palabra: str, listaPalabras: list, n: int) -> dict[dict]:
     if n != 1 and n != -1:
         print("ERROR funcion: palabrasAntePos")
 
@@ -54,11 +54,12 @@ def palabrasAntePos(palabra, listaPalabras, n):
                 else:
                     antePos[listaPalabras[i - n]] += 1
         i += 1
+
     return antePos
 
 
 ### TESTEAR ###
-def getPalabras(archivo, lista: list):
+def getPalabras(archivo, lista: list) -> dict:
     archivo.seek(0) # Vuelve al principio del archivo
     texto = archivo.readlines()
     dictPalabras = {}
@@ -75,7 +76,7 @@ def getPalabras(archivo, lista: list):
 
     return dictPalabras
 
-def completaFrase(nombre: str, diccionarioPalabras: dict):
+def completaFrase(nombre: str, diccionarioPalabras: dict, listaDePalabras: list):
     rutaArchivo = f"Frases/{nombre}.txt"
     frasesArchivo = open(rutaArchivo, 'r')
 
@@ -83,7 +84,7 @@ def completaFrase(nombre: str, diccionarioPalabras: dict):
     i = 1
     frasesArchivo.seek(0)
 
-    while i <= cantLineas-1:
+    while i <= cantLineas:
         linea = frasesArchivo.readline()
         linea = linea[:-1]
         linea = linea.split(' ')
@@ -102,22 +103,39 @@ def completaFrase(nombre: str, diccionarioPalabras: dict):
         #print(linea)
         #print(palabraAnterior)
         #print(palabraSiguiente)
-        remplazaGuion(palabraAnterior, palabraSiguiente, diccionarioPalabras, linea, nombre)
+        remplazaGuion(palabraAnterior, palabraSiguiente, diccionarioPalabras, linea, nombre, listaDePalabras)
         i += 1
     #remplazaGuion('me', 'en', diccionarioPalabras, frasesArchivo, nombre)
 
     frasesArchivo.close()
 
-def remplazaGuion(anterior: str, siguiente: str, palabrasDict: dict, linea, persona: str):
-    salida = open(f"Salidas/{persona}.txt", "w")
-    """
+def remplazaGuion(anterior: str, siguiente: str, palabrasDict: dict, linea: str, persona: str, listaDePalabras: list):
+    salida = open(f"Salidas/{persona}.txt", "a")
     if anterior != [] and anterior in palabrasDict:
-        print(f"palabras siguientes a la palabra anterior al guion {anterior}")
-        #print(palabrasDict[anterior]["siguientes"])
+        palabra = masRepetida(palabrasDict[anterior]["siguientes"])
+        linea[linea.index('_')] = palabra
+        linea = ' '.join(linea) + '\n'
     elif siguiente != [] and siguiente in palabrasDict:
-        print(f"palabras anteriores a la palabra siguiente al guion {siguiente}")
-        #print(palabrasDict[siguiente]["anteriores"])
-        """
+        palabra = masRepetida(palabrasDict[siguiente]["anteriores"])
+        linea[linea.index('_')] = palabra
+        linea = ' '.join(linea) + '\n'
+    else:
+        masFrecuente = max(listaDePalabras, key=listaDePalabras.count) # si las palabras anteriores y siguientes no estan en la lista agrego la mas frecuente del texto pasado
+        linea[linea.index('_')] = masFrecuente
+        linea = ' '.join(linea) + '\n'
+
+    salida.write(linea)
+
+def masRepetida(dictPalabras: dict) -> str:
+    maxFrecuencia = 0
+    maxPalabra = ''
+    
+    for palabra, frecuencia in dictPalabras.items():
+        if frecuencia > maxFrecuencia:
+            maxFrecuencia = frecuencia
+            maxPalabra = palabra
+
+    return maxPalabra
 
 
 def main():
@@ -128,29 +146,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-""" esto iba en completa frase
-    lista_diccionarios = []
-
-    for linea in lineasArchivo:
-        linea = linea.split(' ')
-        for i in range(len(linea)):
-            if(linea[i] == '_'):
-                if(linea[i-1]):
-                    palabra_anterior = linea[i-1]
-                else:
-                    palabra_anterior = null
-
-                if(linea[i+1]):
-                    palabra_siguiente = linea[i+1]
-                else:
-                    palabra_siguiente = null
-
-                diccionario = {
-                    palabra_anterior: palabra_anterior,
-                    palabra_siguiente: palabra_siguiente,
-                    posibles_valores: [(de,2), (para,5)]
-                }
-                lista_diccionarios.append(diccionario)
-    """
