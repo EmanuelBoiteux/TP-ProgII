@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <ctype.h>
+#include "head.h"
 
 void creaRutaTest(){
     char *ruta_test = creaRuta("Cerati");
@@ -10,4 +11,8 @@ void creaRutaTest(){
     strcpy(ruta_test, creaRuta("Leo_Messi"));
     assert(strcmp(ruta_test, "Textos/Leo_Messi/Leo_Messi.txt") == 0);
     free(ruta_test);
+}
+
+int main() {
+
 }

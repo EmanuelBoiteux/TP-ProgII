@@ -1,16 +1,17 @@
 import sys
 import json
 
-def readArchivo(nombre):
+def readArchivo(nombre: str):
     rutaArchivo = f"Entradas/{nombre}.txt"
     fLectura = open(rutaArchivo, 'r')
     listaPrueba = listaPalabras(fLectura)
-    getPalabras(fLectura, listaPrueba)
+    diccionarioPalabras = getPalabras(fLectura, listaPrueba)
+    completaFrase(nombre, diccionarioPalabras)
     fLectura.close()
     
 
 ### TESTEAR ###
-def listaPalabras(archivo):
+def listaPalabras(archivo) -> list[str]:
     palabras = []
     for linea in archivo:
         linea = linea.split(' ')
@@ -32,23 +33,32 @@ def palabrasAntePos(palabra, listaPalabras, n):
     if n != 1 and n != -1:
         print("ERROR funcion: palabrasAntePos")
 
-    antePos = []
+    antePos = {}
     largo = len(listaPalabras)
     i = 0
     while i < largo:
         if i != 0 and i != largo - 1:
             if listaPalabras[i] == palabra and listaPalabras[i - n] != '-':
-                antePos.append(listaPalabras[i - n])
+                if listaPalabras[i - n] not in antePos:
+                    antePos[listaPalabras[i - n]] = 1
+                else:
+                    antePos[listaPalabras[i - n]] += 1
         elif i == 0 and listaPalabras[0] == palabra and n == -1 and listaPalabras[1] != '-': # primera palabra de la lista igual a la palabra, y busco la palabra posterior
-                antePos.append(listaPalabras[i - n])
+                if listaPalabras[i - n] not in antePos:
+                    antePos[listaPalabras[i - n]] = 1
+                else:
+                    antePos[listaPalabras[i - n]] += 1
         elif i == largo - 1 and listaPalabras[largo - 1] == palabra and n == 1 and listaPalabras[largo - 2] != '-': # ultima palabra de la lista igual a la palabra, y busco la palabra anterior
-                antePos.append(listaPalabras[i - n])
+                if listaPalabras[i - n] not in antePos:
+                    antePos[listaPalabras[i - n]] = 1
+                else:
+                    antePos[listaPalabras[i - n]] += 1
         i += 1
     return antePos
 
 
 ### TESTEAR ###
-def getPalabras(archivo, lista):
+def getPalabras(archivo, lista: list):
     archivo.seek(0) # Vuelve al principio del archivo
     texto = archivo.readlines()
     dictPalabras = {}
@@ -63,48 +73,58 @@ def getPalabras(archivo, lista):
         json.dump(dictPalabras, archivo_salida, indent=1)
     """
 
-def completaFrase(nombre):
+    return dictPalabras
+
+def completaFrase(nombre: str, diccionarioPalabras: dict):
     rutaArchivo = f"Frases/{nombre}.txt"
     frasesArchivo = open(rutaArchivo, 'r')
 
-    i = 0
-    linea = frasesArchivo.readline()
-    while linea != '':
+    cantLineas = len(frasesArchivo.readlines())
+    i = 1
+    frasesArchivo.seek(0)
+
+    while i <= cantLineas-1:
+        linea = frasesArchivo.readline()
         linea = linea[:-1]
         linea = linea.split(' ')
         largo = len(linea)
         posGuion = linea.index('_')
-        print(linea)
         if posGuion == 0:
-            print('posicion 0')
             palabraAnterior = []
             palabraSiguiente = linea[posGuion + 1]
         elif posGuion == largo - 1:
-            print('posicion final')
             palabraAnterior = linea[posGuion - 1]
             palabraSiguiente = []
         else:
-            print('tercera opcion')
             palabraAnterior = linea[posGuion - 1]
             palabraSiguiente = linea[posGuion + 1]
 
-        print(palabraAnterior)
-        print(palabraSiguiente)
-
-        linea = frasesArchivo.readline()
+        #print(linea)
+        #print(palabraAnterior)
+        #print(palabraSiguiente)
+        remplazaGuion(palabraAnterior, palabraSiguiente, diccionarioPalabras, linea, nombre)
         i += 1
-
-
+    #remplazaGuion('me', 'en', diccionarioPalabras, frasesArchivo, nombre)
 
     frasesArchivo.close()
+
+def remplazaGuion(anterior: str, siguiente: str, palabrasDict: dict, linea, persona: str):
+    salida = open(f"Salidas/{persona}.txt", "w")
+    """
+    if anterior != [] and anterior in palabrasDict:
+        print(f"palabras siguientes a la palabra anterior al guion {anterior}")
+        #print(palabrasDict[anterior]["siguientes"])
+    elif siguiente != [] and siguiente in palabrasDict:
+        print(f"palabras anteriores a la palabra siguiente al guion {siguiente}")
+        #print(palabrasDict[siguiente]["anteriores"])
+        """
 
 
 def main():
     if len(sys.argv) != 2:
         print("Numero de argumentos incorrecto")
     else:
-        #readArchivo(sys.argv[1])
-        completaFrase(sys.argv[1])
+        readArchivo(sys.argv[1])
 
 if __name__ == "__main__":
     main()
