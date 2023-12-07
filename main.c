@@ -19,6 +19,7 @@ void limpiaTexto(FILE* archivo, char persona[]){
             fputc(' ', salida);
         }
         else if (c == '\n'){
+            printf("elif\n");
             fputc(' ', salida);
         }
         else if (c == '.'){
@@ -50,7 +51,6 @@ void getArchivos(char nombre[]){
     //strcat(strcat(strcpy(comando, "cd Textos/"), nombre), " && ls -I archivo.txt > archivo.txt");
     system(comando); 
 }
-
 void getNombre(char persona[]){
 
     /*

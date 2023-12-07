@@ -11,7 +11,7 @@ def readArchivo(nombre: str):
     
 
 ### TESTEAR ###
-def listaPalabras(archivo) -> list[str]:
+def listaPalabras(archivo) -> list:
     palabras = []
     for linea in archivo:
         linea = linea.split(' ')
@@ -29,7 +29,7 @@ def listaPalabras(archivo) -> list[str]:
 ### TESTEAR ###
 # n = 1: palabra anterior
 # n = -1: palabra posterior
-def palabrasAntePos(palabra: str, listaPalabras: list, n: int) -> dict[dict]:
+def palabrasAntePos(palabra: str, listaPalabras: list, n: int) -> dict:
     if n != 1 and n != -1:
         print("ERROR funcion: palabrasAntePos")
 
