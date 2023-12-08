@@ -86,7 +86,8 @@ def completaFrase(nombre: str, diccionarioPalabras: dict, listaDePalabras: list)
 
     while i <= cantLineas:
         linea = frasesArchivo.readline()
-        linea = linea[:-1]
+        if linea[-1] != '_': # evitamos quitar el guion cuando tenemos _EOF, en cualquier otro caso, quitamos el \n del final de la linea
+            linea = linea[:-1]
         linea = linea.split(' ')
         largo = len(linea)
         posGuion = linea.index('_')
