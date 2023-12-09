@@ -1,0 +1,2 @@
+motivos.txt
+sinprincipionifinal.txt

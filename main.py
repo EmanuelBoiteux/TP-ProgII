@@ -6,9 +6,15 @@ def readArchivo(nombre: str):
     fLectura = open(rutaArchivo, 'r')
     palabrasList = listaPalabras(fLectura)
     diccionarioPalabras = getPalabras(fLectura, palabrasList)
-    completaFrase(nombre, diccionarioPalabras, palabrasList)
+    completaFrase(nombre, diccionarioPalabras, mayorFrecuencia(palabrasList))
     fLectura.close()
     
+def mayorFrecuencia(palabrasList: list) -> tuple:
+    for palabra in palabrasList:
+        if palabra == '-':
+            palabrasList.remove(palabra)
+    masFrecuente = max(palabrasList, key=palabrasList.count)
+    return masFrecuente
 
 ### TESTEAR ###
 def listaPalabras(archivo) -> list:
@@ -110,7 +116,7 @@ def completaFrase(nombre: str, diccionarioPalabras: dict, listaDePalabras: list)
 
     frasesArchivo.close()
 
-def remplazaGuion(anterior: str, siguiente: str, palabrasDict: dict, linea: str, persona: str, listaDePalabras: list):
+def remplazaGuion(anterior: str, siguiente: str, palabrasDict: dict, linea: str, persona: str, masFrecuente: str):
     salida = open(f"Salidas/{persona}.txt", "a")
     if anterior != [] and anterior in palabrasDict:
         palabra = masRepetida(palabrasDict[anterior]["siguientes"])
@@ -121,8 +127,7 @@ def remplazaGuion(anterior: str, siguiente: str, palabrasDict: dict, linea: str,
         linea[linea.index('_')] = palabra
         linea = ' '.join(linea) + '\n'
     else:
-        masFrecuente = max(listaDePalabras, key=listaDePalabras.count) # si las palabras anteriores y siguientes no estan en la lista agrego la mas frecuente del texto pasado
-        linea[linea.index('_')] = masFrecuente
+        linea[linea.index('_')] = masFrecuente # si las palabras anteriores y siguientes no estan en la lista agrego la mas frecuente del texto pasado
         linea = ' '.join(linea) + '\n'
 
     salida.write(linea)
