@@ -1,0 +1,3 @@
+sol espacio sol ciudad sol espacio
+perro espacio hoja tiempo flor ciudad
+perro ciudad flor tiempo ciudad hoja

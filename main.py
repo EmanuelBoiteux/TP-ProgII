@@ -1,5 +1,4 @@
 import sys
-import json
 
 def readArchivo(nombre: str):
     rutaArchivo = f"Entradas/{nombre}.txt"
@@ -9,14 +8,14 @@ def readArchivo(nombre: str):
     completaFrase(nombre, diccionarioPalabras, mayorFrecuencia(palabrasList))
     fLectura.close()
     
-def mayorFrecuencia(palabrasList: list) -> tuple:
+def mayorFrecuencia(palabrasList: list) -> str:
     for palabra in palabrasList:
         if palabra == '-':
             palabrasList.remove(palabra)
     masFrecuente = max(palabrasList, key=palabrasList.count)
     return masFrecuente
 
-### TESTEAR ###
+
 def listaPalabras(archivo) -> list:
     palabras = []
     for linea in archivo:
@@ -64,7 +63,12 @@ def palabrasAntePos(palabra: str, listaPalabras: list, n: int) -> dict:
     return antePos
 
 
-### TESTEAR ###
+"""
+recibe un archivo y una lista y crea un diccionario donde cada palabra de la lista recibida
+es una clave del diccionario y los valores son dos diccionarios, el primero almacena otro diccionario
+con las palabras que preceden a la palabra, y el segundo es otro diccionario con las palabras que le
+suceden a la palabra
+"""
 def getPalabras(archivo, lista: list) -> dict:
     archivo.seek(0) # Vuelve al principio del archivo
     texto = archivo.readlines()
@@ -82,7 +86,12 @@ def getPalabras(archivo, lista: list) -> dict:
 
     return dictPalabras
 
-def completaFrase(nombre: str, diccionarioPalabras: dict, listaDePalabras: list):
+"""
+completaFrase recibe el nombre de una persona, un diccionario de palabras y una palabra. Lee linea a linea el texto con las
+frases correspondientes a la persona pasada como argumento y cuando encuentra un guion almacena la palabra anterior y posterior al mismo,
+si las hubiere, caso contrario guarda un string vacio segun corresponda.
+"""
+def completaFrase(nombre: str, diccionarioPalabras: dict, palabraRepetida: str):
     rutaArchivo = f"Frases/{nombre}.txt"
     frasesArchivo = open(rutaArchivo, 'r')
 
@@ -97,20 +106,20 @@ def completaFrase(nombre: str, diccionarioPalabras: dict, listaDePalabras: list)
         linea = linea.split(' ')
         largo = len(linea)
         posGuion = linea.index('_')
-        if posGuion == 0:
-            palabraAnterior = []
+        if posGuion == 0 and largo == 1:
+            palabraAnterior = ''
+            palabraSiguiente = ''
+        elif posGuion == 0:
+            palabraAnterior = ''
             palabraSiguiente = linea[posGuion + 1]
         elif posGuion == largo - 1:
             palabraAnterior = linea[posGuion - 1]
-            palabraSiguiente = []
+            palabraSiguiente = ''
         else:
             palabraAnterior = linea[posGuion - 1]
             palabraSiguiente = linea[posGuion + 1]
 
-        #print(linea)
-        #print(palabraAnterior)
-        #print(palabraSiguiente)
-        remplazaGuion(palabraAnterior, palabraSiguiente, diccionarioPalabras, linea, nombre, listaDePalabras)
+        remplazaGuion(palabraAnterior, palabraSiguiente, diccionarioPalabras, linea, nombre, palabraRepetida)
         i += 1
     #remplazaGuion('me', 'en', diccionarioPalabras, frasesArchivo, nombre)
 
@@ -118,11 +127,11 @@ def completaFrase(nombre: str, diccionarioPalabras: dict, listaDePalabras: list)
 
 def remplazaGuion(anterior: str, siguiente: str, palabrasDict: dict, linea: str, persona: str, masFrecuente: str):
     salida = open(f"Salidas/{persona}.txt", "a")
-    if anterior != [] and anterior in palabrasDict:
+    if anterior != '' and anterior in palabrasDict and palabrasDict[anterior]["siguientes"] != {}:
         palabra = masRepetida(palabrasDict[anterior]["siguientes"])
         linea[linea.index('_')] = palabra
         linea = ' '.join(linea) + '\n'
-    elif siguiente != [] and siguiente in palabrasDict:
+    elif siguiente != '' and siguiente in palabrasDict and palabrasDict[siguiente]["anteriores"] != {}:
         palabra = masRepetida(palabrasDict[siguiente]["anteriores"])
         linea[linea.index('_')] = palabra
         linea = ' '.join(linea) + '\n'

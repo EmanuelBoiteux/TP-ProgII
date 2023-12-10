@@ -1,14 +1,5 @@
 #include "main.h"
 
-/*
-void creaRutaTest(){
-    char *ruta_test = creaRuta("Cerati");
-    assert(strcmp(ruta_test, "Textos/Cerati/Cerati.txt") == 0);
-    strcpy(ruta_test, creaRuta("Leo_Messi"));
-    assert(strcmp(ruta_test, "Textos/Leo_Messi/Leo_Messi.txt") == 0);
-    free(ruta_test);
-}
-*/
 
 void test_getArchivos(){
     // test 1
@@ -32,38 +23,51 @@ void test_getArchivos(){
     fclose(archivo2);
 }
 
-/*
-void test_getNombre(){
-
-}
-*/
-
 void test_limpiaTexto(){
-    char ruta[255] = "Textos/Abel_Pintos/motivos.txt";
-    char rutaTest[255] = "Test Salidas/motivosSalida.txt";
-    FILE* resultado = fopen(ruta, "r");
-    FILE* archivoTest = fopen(rutaTest, "r");
+    char rutaTest1[255] = "Textos/Abel_Pintos/motivos.txt";
+    char rutaTest2[255] = "Textos/Abel_Pintos/sinprincipionifinal.txt";
+    char salidaEsperada[255] = "Test Salidas/motivosSalida.txt";
+    FILE* archivoTest1 = fopen(rutaTest1, "r");
+    FILE* archivoTest2 = fopen(rutaTest2, "r");
+    FILE* archivoSalidaEsperada = fopen(salidaEsperada, "r");
 
-    limpiaTexto(resultado, "Abel_Pintos");
+    limpiaTexto(archivoTest1, "Abel_Pintos");
+    limpiaTexto(archivoTest2, "Abel_Pintos");
 
     FILE* archivoSalida = fopen("Entradas/Abel_Pintos.txt", "r");
     
-    char salida = fgetc(archivoSalida);
-    char test = fgetc(archivoTest);
+    char salida = fgetc(archivoSalidaEsperada);
+    char test = fgetc(archivoSalida);
     
     while (salida != EOF && test != EOF){
-        printf("%c %c\n", salida, test);
+        //printf("%c %c\n", salida, test);
         assert(salida == test);
-        salida = fgetc(archivoSalida);
-        test = fgetc(archivoTest);
-    }
+        salida = fgetc(archivoSalidaEsperada);
+        test = fgetc(archivoSalida);
+    } // TESTEAR TERMINAR UNA LINEA CON MUCHOS ESPACIO A VER QUE PASA
 
-    fclose(resultado);
-    fclose(archivoTest);
+    fclose(archivoTest1);
+    fclose(archivoTest2);
+    fclose(archivoSalida);
+}
+
+
+void test_getNombre(){
+    getNombre("Gustavo_Cerati");
+    FILE* archivoS = fopen("Entradas/Gustavo_Cerati.txt", "r");
+    char linea[255];
+    // Test 1
+    fgets(linea, sizeof(linea), archivoS);
+    assert(strcmp(linea, "archivo abierto correctamente\n") == 0);
+    // Test 2
+    fgets(linea, sizeof(linea), archivoS);
+    assert(strcmp(linea, "segundo archivo abierto correctamente\n") == 0);
+    fclose(archivoS);
 }
 
 int main(){
-    //test_getArchivos();
+    test_getArchivos();
     test_limpiaTexto();
+    test_getNombre();
     return 0;
 }

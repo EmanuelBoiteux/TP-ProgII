@@ -14,7 +14,7 @@ void limpiaTexto(FILE* archivo, char persona[]){
         if (c == '\r'){
             c = fgetc(archivo);
         } 
-        else if (isspace(c) && c != '\n'){
+        else if (isspace(c) && c != '\n' && letra == 1){
             while(c == ' '){
                 c = fgetc(archivo);
             }
