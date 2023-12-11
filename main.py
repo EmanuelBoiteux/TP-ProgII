@@ -99,7 +99,7 @@ def completaFrase(nombre: str, diccionarioPalabras: dict, palabraRepetida: str):
     salida.close()
 
 
-def remplazaGuion(anterior: str, siguiente: str, palabrasDict: dict[dict], linea: str, masFrecuente: str, archivoSalida):
+def remplazaGuion(anterior: str, siguiente: str, palabrasDict: dict, linea: str, masFrecuente: str, archivoSalida):
     if anterior != '' and anterior in palabrasDict and palabrasDict[anterior]["siguientes"] != {}:
         palabra = masRepetida(palabrasDict[anterior]["siguientes"])
         linea[linea.index('_')] = palabra
@@ -115,7 +115,7 @@ def remplazaGuion(anterior: str, siguiente: str, palabrasDict: dict[dict], linea
     archivoSalida.write(linea)
 
 
-def masRepetida(dictPalabras: dict[str]) -> str:
+def masRepetida(dictPalabras: dict) -> str:
     maxFrecuencia = 0
     maxPalabra = ''
     

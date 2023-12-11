@@ -26,7 +26,7 @@ void test_getArchivos(){
 void test_limpiaTexto(){
     char rutaTest1[255] = "Textos/Abel_Pintos/motivos.txt";
     char rutaTest2[255] = "Textos/Abel_Pintos/sinprincipionifinal.txt";
-    char salidaEsperada[255] = "Test Salidas/motivosSalida.txt";
+    char salidaEsperada[255] = "Test/Test C/Abel_Pintos.txt";
     FILE* archivoTest1 = fopen(rutaTest1, "r");
     FILE* archivoTest2 = fopen(rutaTest2, "r");
     FILE* archivoSalidaEsperada = fopen(salidaEsperada, "r");

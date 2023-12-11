@@ -4,7 +4,7 @@ import json
 
 def test_listaPalabras():
     # Test 1
-    ruta = f"Test Salidas/Test Python/palabrasTest1.txt"
+    ruta = f"Test/Test Python/palabrasTest1.txt"
     archivo1 = open(ruta, "r")
     resultado = listaPalabras(archivo1)
     lista = ['sabes', 'sabes', 'sabes', '-', 'mi', 'mi', 'nunca', 'nunca', '-', 'nunca', 'nunca', 'nunca','-']
@@ -12,7 +12,7 @@ def test_listaPalabras():
     archivo1.close()
 
     # Test 2
-    ruta = f"Test Salidas/Test Python/palabrasTest2.txt"
+    ruta = f"Test/Test Python/palabrasTest2.txt"
     archivo2 = open(ruta, "r")
     resultado = listaPalabras(archivo2)
     lista = ["en", "un", "pequeno", "pueblo", "habia", "un", "antiguo", "puente", "de", "madera", "que", 
@@ -66,7 +66,7 @@ def test_palabrasAntePos():
 
 def test_getPalabras():
     #Test 1
-    archivo = open("Test Salidas/Test Python/diccionarioTest1.txt", "r")
+    archivo = open("Test/Test Python/diccionarioTest1.txt", "r")
     palabras = listaPalabras(archivo)
 
     resultado = getPalabras(archivo, palabras)
@@ -83,7 +83,7 @@ def test_getPalabras():
     assert resultado == resultadoEsperado
 
     # Test 2
-    archivo = open("Test Salidas/Test Python/diccionarioTest2.txt", "r")
+    archivo = open("Test/Test Python/diccionarioTest2.txt", "r")
     palabras = listaPalabras(archivo)
 
     resultado = getPalabras(archivo, palabras)
@@ -127,7 +127,7 @@ def test_mayorFrecuencia():
 
 def test_completaFrase_remplazaGuion():
     # Test 1
-    archivo1 = open("Test Salidas/Test Python/diccionarioTest1.txt", "r")
+    archivo1 = open("Test/Test Python/diccionarioTest1.txt", "r")
     palabras = listaPalabras(archivo1)
     diccionarioPalabras = getPalabras(archivo1, palabras)
     completaFrase("frasesTest1", diccionarioPalabras, mayorFrecuencia(palabras))
@@ -141,7 +141,7 @@ def test_completaFrase_remplazaGuion():
     archivo1.close()
 
     # Test 2
-    archivo2 = open("Test Salidas/Test Python/diccionarioTest2.txt", "r")
+    archivo2 = open("Test/Test Python/diccionarioTest2.txt", "r")
     palabras = listaPalabras(archivo2)
     diccionarioPalabras = getPalabras(archivo2, palabras)
     completaFrase("frasesTest2", diccionarioPalabras, mayorFrecuencia(palabras))
@@ -156,7 +156,7 @@ def test_completaFrase_remplazaGuion():
     archivo2.close()
 
 def test_masRepetida():
-    archivo1 = open("Test Salidas/Test Python/diccionarioTest1.txt", "r")
+    archivo1 = open("Test/Test Python/diccionarioTest1.txt", "r")
     palabras = listaPalabras(archivo1)
     diccionarioTest1 = getPalabras(archivo1, palabras)
 
@@ -170,7 +170,7 @@ def test_masRepetida():
 
     archivo1.close()
 
-    archivo2 = open("Test Salidas/Test Python/diccionarioTest2.txt", "r")
+    archivo2 = open("Test/Test Python/diccionarioTest2.txt", "r")
     palabras = listaPalabras(archivo2)
     diccionarioTest1 = getPalabras(archivo2, palabras)
 
