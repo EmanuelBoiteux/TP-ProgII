@@ -1,0 +1,2 @@
+archivo abierto correctamente
+segundo archivo abierto correctamente

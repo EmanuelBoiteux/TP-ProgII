@@ -1,0 +1,6 @@
+sol _
+_ espacio
+_ perro
+hoja _
+_ ciudad
+montana _ noche
